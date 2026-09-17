@@ -5,8 +5,17 @@ don't have to be re-derived from memory later.
 
 ## Development setup
 
-- Python 3.12, managed via pyenv (not system Python, not the newest release)
-- Dependency/setup instructions will be added here once the project has installable dependencies
+- Python 3.12, managed via [`uv`](https://docs.astral.sh/uv/) — `uv` installs and pins the
+  interpreter itself, no separate pyenv/venv setup required
+- Clone the repo, then run:
+  ```bash
+  uv sync
+  uv run pre-commit install
+  ```
+  This creates `.venv`, installs all dependencies from `uv.lock`, and wires up the pre-commit
+  git hook (lint/format checks run automatically on every commit)
+- Run any project command through `uv run <command>` (e.g. `uv run pytest`) instead of
+  activating the virtualenv manually — `uv run` uses `.venv` automatically
 
 ## Branching model
 
