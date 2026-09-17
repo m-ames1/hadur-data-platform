@@ -24,7 +24,6 @@ htmlcov/
 *.log
 
 # IDE
-.vscode/
 .idea/
 
 # macOS
@@ -32,3 +31,10 @@ htmlcov/
 
 # Raw data
 data/
+
+# DuckDB catalog file - reproducible from setup/schema.sql
+*.duckdb
+*.duckdb.wal
+
+# Folder for organizing local exploratory querying on the data
+queries/
