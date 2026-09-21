@@ -9,11 +9,16 @@ don't have to be re-derived from memory later.
   interpreter itself, no separate pyenv/venv setup required
 - Clone the repo, then run:
   ```bash
+  ./setup.sh
+  ```
+  This installs dependencies (`uv sync`), wires up the pre-commit git hook, and builds
+  `hadur.duckdb` from `setup/schema.sql` — requires `uv` and `duckdb` to already be installed
+- To run those steps individually instead (or if `setup.sh` fails partway through):
+  ```bash
   uv sync
   uv run pre-commit install
+  duckdb hadur.duckdb -init setup/schema.sql
   ```
-  This creates `.venv`, installs all dependencies from `uv.lock`, and wires up the pre-commit
-  git hook (lint/format checks run automatically on every commit)
 - Run any project command through `uv run <command>` (e.g. `uv run pytest`) instead of
   activating the virtualenv manually — `uv run` uses `.venv` automatically
 
