@@ -38,3 +38,7 @@ data/
 
 # Folder for organizing local exploratory querying on the data
 queries/
+
+# Airflow runtime artifacts
+logs/
+config/
