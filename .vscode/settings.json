@@ -1,13 +1,13 @@
 {
   "duckdb.databases": [
     {
-        "alias": "hadur",
-        "type": "file",
-        "path": "./hadur.duckdb",
-        "readOnly": true,
-        "attached": true
+      "alias": "hadur",
+      "type": "file",
+      "path": "./hadur.duckdb",
+      "readOnly": true,
+      "attached": true
     }
-],
+  ],
   "duckdb.defaultDatabase": "hadur",
   "duckdb.resultsLocation": "beside",
   "duckdb.pageSize": 200,
