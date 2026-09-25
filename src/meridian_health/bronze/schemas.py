@@ -1,0 +1,1 @@
+# Pandera schema per table
