@@ -39,6 +39,9 @@ data/
 # Folder for organizing local exploratory querying on the data
 queries/
 
+# Folder for scratch paper and brainstorming
+scratch_paper/
+
 # Airflow runtime artifacts
 logs/
 config/
