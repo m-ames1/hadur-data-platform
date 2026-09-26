@@ -12,5 +12,6 @@
   "duckdb.resultsLocation": "beside",
   "duckdb.pageSize": 200,
   "duckdb.explorer.defaultRowLimit": 1000,
-  "duckdb.format.keywordCase": "upper"
+  "duckdb.format.keywordCase": "upper",
+  "jupyter.notebookFileRoot": "${workspaceFolder}"
 }
