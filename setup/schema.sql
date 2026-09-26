@@ -165,3 +165,9 @@ CREATE OR REPLACE VIEW meridian_health_raw_providers AS
 CREATE OR REPLACE VIEW meridian_health_raw_supplies AS
     SELECT *
     FROM read_csv_auto('data/landing_zone/meridian_health/*/supplies.csv', all_varchar=true, filename=true, union_by_name=true);
+
+
+-- -- Meridian Health Bronze data
+CREATE OR REPLACE VIEW meridian_health_bronze_encounters AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/encounters/');
