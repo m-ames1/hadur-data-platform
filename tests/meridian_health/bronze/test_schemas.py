@@ -30,7 +30,6 @@ valid_encounters_df = pd.DataFrame(valid_encounter_row)
 
 # Encounters schema tests
 def test_encounters_schema_valid_row_passes():
-
     result_df = EncountersSchema.validate(valid_encounters_df)
 
     # Confirm data type conversion success
@@ -39,7 +38,6 @@ def test_encounters_schema_valid_row_passes():
 
 
 def test_encounters_schema_rejects_null_required_column():
-
     # Immutable operation preferred over in-place mutations
     null_required_col_df = valid_encounters_df.assign(PATIENT=None)
 
@@ -49,7 +47,6 @@ def test_encounters_schema_rejects_null_required_column():
 
 
 def test_encounters_schema_rejects_extra_column():
-
     # Immutable operation preferred over in-place mutations
     extra_col_df = valid_encounters_df.assign(EXTRA_COL="unexpected")
 
@@ -59,7 +56,6 @@ def test_encounters_schema_rejects_extra_column():
 
 
 def test_encounters_schema_rejects_uncoercible_value():
-
     # Immutable operation preferred over in-place mutations
     uncoercible_value_df = valid_encounters_df.assign(BASE_ENCOUNTER_COST="not a number")
 

@@ -27,14 +27,14 @@ def run_bronze_pipeline(batch_date: date) -> None:
     -> Write to Bronze delta table
     """
 
-    landing_zone_path = build_landing_file_path(
+    landing_zone_file_path = build_landing_file_path(
         provider=PROVIDER, batch_date=batch_date, table_name=ENCOUNTERS
     )
 
-    raw_df = pd.read_csv(filepath_or_buffer=landing_zone_path, delimiter=",")
+    raw_df = pd.read_csv(filepath_or_buffer=landing_zone_file_path, delimiter=",")
 
     bronze_df = add_metadata_columns(
-        df=raw_df, source_file=landing_zone_path, batch_date=batch_date
+        df=raw_df, source_file=landing_zone_file_path, batch_date=batch_date
     )
 
     write_to_bronze(provider=PROVIDER, table_name=ENCOUNTERS, df=bronze_df, batch_date=batch_date)
