@@ -12,6 +12,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "freezegun>=1.5.5",
+    "ipykernel>=7.3.0",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
