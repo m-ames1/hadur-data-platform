@@ -65,6 +65,7 @@ def test_encounters_schema_rejects_uncoercible_value():
 
 
 # TODO: Add PatientsSchema unit tests
+# Separate unit test for each test case, see above
 @pytest.mark.skip(reason="not implemented")
-def test_patients_schema_valid_row_passes():
+def test_patients_schema():
     pass
