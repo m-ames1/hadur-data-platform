@@ -12,6 +12,37 @@ The platform follows the same essential rhythm as a blacksmith's forge:
 
 The project demonstrates a provider-to-customer data platform and the engineering discipline required to build one.
 
+## Quick Start
+
+Requires [`uv`](https://docs.astral.sh/uv/), [`duckdb`](https://duckdb.org/docs/installation), and Docker.
+
+```bash
+git clone https://github.com/m-ames1/hadur-data-platform.git
+cd hadur-data-platform
+./setup.sh
+```
+
+`setup.sh` installs Python dependencies, wires up pre-commit, and builds the local
+DuckDB catalogs. Then configure and start Airflow:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and fill in:
+- `AIRFLOW_UID` — output of `id -u`
+- `FERNET_KEY` — generate with:
+  ```bash
+  docker run --rm apache/airflow:3.3.2-python3.12 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+  ```
+
+```bash
+docker compose up
+```
+
+- Airflow UI: [http://localhost:8080](http://localhost:8080)
+- Query the local catalogs: `duckdb hadur.duckdb -init setup/attach.sql`
+
 ## Why Hadúr?
 
 Hadur Data Platform takes its name from Hadúr, the Hungarian divine blacksmith associated with fire, metallurgy, and the forging of weapons for gods and heroes.
