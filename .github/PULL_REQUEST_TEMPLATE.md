@@ -32,4 +32,6 @@
 
 ## After merge
 
-- [ ] `git tag -a vX.Y.Z -m "..."` && `git push origin vX.Y.Z` (only if this PR bumped the version)
+Tag the release, if this PR bumped the version:
+
+`git tag -a vX.Y.Z -m "..."` && `git push origin vX.Y.Z`
