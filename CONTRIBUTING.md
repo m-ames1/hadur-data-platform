@@ -12,15 +12,38 @@ don't have to be re-derived from memory later.
   ./setup.sh
   ```
   This installs dependencies (`uv sync`), wires up the pre-commit git hook, and builds
-  `hadur.duckdb` from `setup/schema.sql` — requires `uv` and `duckdb` to already be installed
+  the local DuckDB catalogs under `catalog/` from `setup/schema.sql` — requires `uv` and
+  `duckdb` to already be installed
 - To run those steps individually instead (or if `setup.sh` fails partway through):
   ```bash
   uv sync
   uv run pre-commit install
-  duckdb hadur.duckdb -init setup/schema.sql
+  mkdir -p catalog
+  duckdb hadur.duckdb -init setup/schema.sql -no-stdin
   ```
 - Run any project command through `uv run <command>` (e.g. `uv run pytest`) instead of
   activating the virtualenv manually — `uv run` uses `.venv` automatically
+
+## Local querying
+
+Tables are addressed as `<layer>.<provider>.<table>` — e.g. `bronze.meridian_health.encounters`.
+Each medallion layer is a separate DuckDB catalog file under `catalog/`, and each provider is a
+schema inside it. A single DuckDB file offers only `schema.table`, so the layer has to be a
+catalog to get three levels.
+
+`ATTACH` is per-connection session state and is never persisted, so every session runs the
+attach script:
+
+```bash
+duckdb hadur.duckdb -init setup/attach.sql
+```
+
+Run it from the project root — the views store relative paths and resolve them against the
+process working directory.
+
+When onboarding a provider, add a schema to the relevant layer catalog in `setup/schema.sql`
+rather than a new view-name prefix. Layer catalogs are gitignored build artifacts, reproducible
+at any time from `setup/schema.sql`.
 
 ## Branching model
 

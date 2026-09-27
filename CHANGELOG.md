@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- DuckDB tables are now addressed as `<layer>.<provider>.<table>` (e.g.
+  `bronze.meridian_health.encounters`) instead of flat prefixed view names
+  (`meridian_health_bronze_encounters`). Each medallion layer is a separate
+  catalog file under `catalog/`, with one schema per provider. Sessions attach
+  the layer catalogs via `duckdb hadur.duckdb -init setup/attach.sql`.
+
 ### Deprecated
 
 ### Removed

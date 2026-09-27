@@ -6,6 +6,20 @@
       "path": "./hadur.duckdb",
       "readOnly": true,
       "attached": true
+    },
+    {
+      "alias": "landing",
+      "type": "file",
+      "path": "./catalog/landing.duckdb",
+      "readOnly": true,
+      "attached": true
+    },
+    {
+      "alias": "bronze",
+      "type": "file",
+      "path": "./catalog/bronze.duckdb",
+      "readOnly": true,
+      "attached": true
     }
   ],
   "duckdb.defaultDatabase": "hadur",
@@ -13,5 +27,8 @@
   "duckdb.pageSize": 200,
   "duckdb.explorer.defaultRowLimit": 1000,
   "duckdb.format.keywordCase": "upper",
-  "jupyter.notebookFileRoot": "${workspaceFolder}"
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "[sql]": {
+    "editor.wordBasedSuggestions": "off"
+  }
 }

@@ -19,7 +19,10 @@ if ! command -v duckdb &> /dev/null; then
     exit 1
 fi
 
-duckdb hadur.duckdb -init setup/schema.sql
-echo "hadur.duckdb built from setup/schema.sql."
+mkdir -p catalog
+
+duckdb hadur.duckdb -init setup/schema.sql -no-stdin
+echo "Layer catalogs built under catalog/ from setup/schema.sql."
+echo "Query them with: duckdb hadur.duckdb -init setup/attach.sql"
 
 echo "Setup complete."
