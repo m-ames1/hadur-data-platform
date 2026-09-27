@@ -147,3 +147,30 @@ def write_to_bronze(provider: str, table_name: str, df: pd.DataFrame, batch_date
         # Idempotent on batch level
         predicate=f"_batch_date = '{batch_date.isoformat()}'",
     )
+
+
+def run_bronze_pipeline(batch_date: date, provider: str, table_name: str) -> None:
+    """
+    Runs the Bronze pipeline for a single table: builds its landing zone
+    path, reads the raw CSV, adds provenance metadata, and writes it to
+    that table's Bronze Delta table.
+
+    -> Build landing zone path
+    -> Read raw data
+    -> Add metadata columns
+    -> Write to Bronze delta table
+
+    # TODO: Quarantine process pending.
+    """
+
+    landing_zone_file_path = build_landing_file_path(
+        provider=provider, batch_date=batch_date, table_name=table_name
+    )
+
+    raw_df = pd.read_csv(filepath_or_buffer=landing_zone_file_path, delimiter=",")
+
+    bronze_df = add_metadata_columns(
+        df=raw_df, source_file=landing_zone_file_path, batch_date=batch_date
+    )
+
+    write_to_bronze(provider=provider, table_name=table_name, df=bronze_df, batch_date=batch_date)

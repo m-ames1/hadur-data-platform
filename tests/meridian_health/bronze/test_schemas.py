@@ -62,3 +62,10 @@ def test_encounters_schema_rejects_uncoercible_value():
     # If the unit test raises one of the schema errors, it's a success
     with pytest.raises(SCHEMA_ERRORS):
         EncountersSchema.validate(uncoercible_value_df)
+
+
+# TODO: Add PatientsSchema unit tests
+# Separate unit test for each test case, see above
+@pytest.mark.skip(reason="not implemented")
+def test_patients_schema():
+    pass

@@ -11,12 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- DuckDB tables are now addressed as `<layer>.<provider>.<table>` (e.g.
-  `bronze.meridian_health.encounters`) instead of flat prefixed view names
-  (`meridian_health_bronze_encounters`). Each medallion layer is a separate
-  catalog file under `catalog/`, with one schema per provider. Sessions attach
-  the layer catalogs via `duckdb hadur.duckdb -init setup/attach.sql`.
-
 ### Deprecated
 
 ### Removed
@@ -24,6 +18,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## [0.2.0] - 2026-09-27
+
+### Added
+
+- Bronze ingestion for the Meridian Health `patients` table, using the same
+  generalized `run_bronze_pipeline()` path as `encounters`.
+- `run_bronze_pipeline()` generalized to accept `provider` and `table_name`
+  parameters instead of being hardcoded to `encounters`, so the same
+  read -> add-metadata -> write mechanics work for any table.
+- A `PatientsSchema` placeholder in `schemas.py` — declared with no fields
+  yet, so it rejects any real data outright until built out. Marks the
+  pending schema work as acknowledged rather than absent.
+- Skipped test stubs for the pending `PatientsSchema` tests and for a
+  `run_bronze_pipeline()` integration test, so both are visible in the test
+  suite rather than silently missing.
+
+### Changed
+
+- DuckDB tables are now addressed as `<layer>.<provider>.<table>` (e.g.
+  `bronze.meridian_health.encounters`) instead of flat prefixed view names
+  (`meridian_health_bronze_encounters`). Each medallion layer is a separate
+  catalog file under `catalog/`, with one schema per provider. Sessions attach
+  the layer catalogs via `duckdb hadur.duckdb -init setup/attach.sql`.
+
+### Known limitations
+
+- `PatientsSchema` has no columns declared yet — validation isn't enforced
+  for patients, same as `encounters`.
+- Schema validation still isn't wired into the write path at all; both
+  tables write unvalidated rows to Bronze. Quarantine handling remains
+  unimplemented.
+- `encounters`' own pipeline file hasn't been updated to use the new shared
+  `run_bronze_pipeline()` yet — that refactor ships as its own release
+  immediately after this one.
+- Only 2 of the 14 planned Meridian Health tables are now ingested
+  (`encounters`, `patients`).
 
 ## [0.1.0] - 2026-09-27
 
