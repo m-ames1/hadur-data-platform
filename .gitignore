@@ -45,3 +45,6 @@ scratch_paper/
 # Airflow runtime artifacts
 logs/
 config/
+
+# Exploratory jupyter notebook files
+notebooks/
