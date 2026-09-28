@@ -19,6 +19,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.5.0] - 2026-09-28
+
+### Added
+
+- A committed 10-patient sample batch under `sample_data/`, so the
+  repository runs end to end on clone without generating data first —
+  437 encounters, 216 conditions, 2,731 observations, roughly 3 MB.
+- `scripts/build_sample_batch.py`, which carves that sample from a full
+  Synthea export. The cohort is selected by patient and cascaded through
+  every table, so foreign keys resolve and the sample supports the same
+  joins as a full batch. Output is deterministic, so re-running it
+  produces no spurious diffs.
+
+### Changed
+
+- `setup.sh` seeds `data/landing_zone/` from `sample_data/` when no
+  landing-zone data is present, and leaves existing data untouched.
+- README Quick Start rewritten around the sample batch.
+
+### Known limitations
+
+- The Meridian Health slice is still an unfiltered copy of the full
+  Synthea export rather than an organization-filtered slice. The sampler
+  mirrors that and will need updating once the filter lands.
+- `claims`, `claims_transactions` and `payer_transitions` are row-capped
+  at 2,000 rows in the sample. They are out of scope for every layer and
+  exist only so the `landing.synthea` views resolve.
+- Schema validation still isn't wired into the write path across any
+  table. Quarantine handling remains unimplemented.
+- The Airflow DAG is still absent; pipelines run as standalone scripts.
+
 ## [0.4.1] - 2026-09-28
 
 ### Removed
