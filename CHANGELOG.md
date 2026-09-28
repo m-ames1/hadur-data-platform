@@ -19,6 +19,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.3.0] - 2026-09-27
+
+### Added
+
+- Bronze ingestion for the Meridian Health `conditions` table, via
+  `conditions_pipeline.py`, using the same shared `run_bronze_pipeline()`
+  path as `encounters` and `patients`.
+- A `ConditionsSchema` placeholder in `schemas.py` — fields-less, same as
+  `PatientsSchema`, so the pending schema work is visible rather than
+  absent.
+- A skipped test stub for the pending `ConditionsSchema` tests in
+  `test_schemas.py`.
+
+### Known limitations
+
+- `ConditionsSchema` has no columns declared yet — validation isn't
+  enforced for conditions, same as encounters and patients.
+- `conditions` has no `Id` column; it's unique only by a composite key
+  (`PATIENT` + `ENCOUNTER` + `CODE` + date). Dedup on that key isn't
+  implemented yet — that's Silver-layer work, not part of this release.
+- Schema validation still isn't wired into the write path at all across
+  any table. Quarantine handling remains unimplemented.
+- Only 3 of 14 planned Meridian Health tables are now ingested
+  (`encounters`, `patients`, `conditions`).
+
 ## [0.2.0] - 2026-09-27
 
 ### Added

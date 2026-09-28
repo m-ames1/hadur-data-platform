@@ -9,3 +9,4 @@ BRONZE_ZONE = DATA_ROOT / "bronze"
 # Table names
 ENCOUNTERS = "encounters"
 PATIENTS = "patients"
+CONDITIONS = "conditions"
