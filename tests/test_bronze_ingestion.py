@@ -69,7 +69,7 @@ def test_add_metadata_columns():
     assert_frame_equal(actual_df, expected_df)
 
 
-# TODO: Add write_to_bronze() test
+# TODO: Add write_to_bronze() integration test
 # Integration test, not a unit test — exercises a real Delta write
 # (tmp_path + a small DataFrame), no mocks.
 @pytest.mark.skip(reason="not implemented")
