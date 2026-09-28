@@ -27,4 +27,4 @@
 -- =============================================================================
 
 ATTACH IF NOT EXISTS 'catalog/landing.duckdb' AS landing (READ_ONLY);
-ATTACH IF NOT EXISTS 'catalog/bronze.duckdb'  AS bronze  (READ_ONLY);
+ATTACH IF NOT EXISTS 'catalog/bronze.duckdb'  AS bronze (READ_ONLY);

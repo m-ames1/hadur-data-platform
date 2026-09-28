@@ -200,3 +200,15 @@ CREATE OR REPLACE VIEW landing.meridian_health.supplies AS
 CREATE OR REPLACE VIEW bronze.meridian_health.encounters AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/encounters/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.patients AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/patients/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.conditions AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/conditions/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.observations AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/observations/');
