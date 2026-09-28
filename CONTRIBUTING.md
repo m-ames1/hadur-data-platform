@@ -57,7 +57,7 @@ Examples:
 - `feat/silver-deidentify`
 - `fix/gold-schema-drift`
 
-Types in use: `feat`, `fix`, `chore`.
+Types in use: `feat`, `fix`, `chore`, `docs`, `refactor`.
 
 ## Commit messages
 
