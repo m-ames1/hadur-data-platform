@@ -2,7 +2,7 @@
 -- Hadur Data Platform — DuckDB catalog definitions
 --
 -- Run from the project root:
---     duckdb hadur.duckdb -init setup/schema.sql -no-stdin
+--     duckdb hadur.duckdb -init setup/schema_landing.sql -no-stdin
 --
 -- Layout: one catalog (.duckdb file) per medallion layer under catalog/, one
 -- schema per provider inside it, so every table addresses as
@@ -40,14 +40,22 @@
 --                       batches, so a provider schema change in a later batch
 --                       doesn't silently misalign into the wrong columns.
 --
--- Silver/Gold catalogs are added here once each stage's ingestion code exists
--- and has actually written data to query — not before.
+-- Bronze views live in setup/schema_bronze.sql, not here: they bind to Delta
+-- paths at CREATE VIEW time and so cannot be created until a pipeline has
+-- written output. Silver/Gold get their own files on the same pattern once
+-- each stage writes data.
 -- =============================================================================
 
 INSTALL delta;
 LOAD delta;
 
 ATTACH IF NOT EXISTS 'catalog/landing.duckdb' AS landing;
+
+-- Bronze is attached and its schema created here even though this file defines
+-- no Bronze views. setup/attach.sql opens both catalogs READ_ONLY, and a
+-- READ_ONLY attach cannot create a missing file — so without this, every query
+-- session on a fresh clone aborts on the first statement, landing views
+-- included, until a pipeline has run. Not leftover from the split; load-bearing.
 ATTACH IF NOT EXISTS 'catalog/bronze.duckdb'  AS bronze;
 
 CREATE SCHEMA IF NOT EXISTS landing.synthea;
@@ -191,24 +199,3 @@ CREATE OR REPLACE VIEW landing.meridian_health.providers AS
 CREATE OR REPLACE VIEW landing.meridian_health.supplies AS
     SELECT *
     FROM read_csv_auto('data/landing_zone/meridian_health/*/supplies.csv', all_varchar=true, filename=true, union_by_name=true);
-
-
--- =============================================================================
--- bronze.meridian_health
--- =============================================================================
-
-CREATE OR REPLACE VIEW bronze.meridian_health.encounters AS
-    SELECT *
-    FROM delta_scan('data/bronze/meridian_health/encounters/');
-
-CREATE OR REPLACE VIEW bronze.meridian_health.patients AS
-    SELECT *
-    FROM delta_scan('data/bronze/meridian_health/patients/');
-
-CREATE OR REPLACE VIEW bronze.meridian_health.conditions AS
-    SELECT *
-    FROM delta_scan('data/bronze/meridian_health/conditions/');
-
-CREATE OR REPLACE VIEW bronze.meridian_health.observations AS
-    SELECT *
-    FROM delta_scan('data/bronze/meridian_health/observations/');
