@@ -19,6 +19,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.4.1] - 2026-09-28
+
+### Removed
+
+- `setup/schema.sql`, split into `setup/schema_landing.sql` (landing
+  views plus both catalog attachments) and `setup/schema_bronze.sql`
+  (Bronze views). The two have different preconditions: landing views
+  need only raw CSVs, while Bronze views bind to Delta paths at
+  `CREATE VIEW` time and cannot exist before the first pipeline run.
+
+### Fixed
+
+- `setup/attach.sql` no longer fails on a fresh clone. It attaches
+  `catalog/bronze.duckdb` READ_ONLY, which cannot create a missing file,
+  so the entire session aborted — including landing queries — before any
+  Bronze data existed. `schema_landing.sql` now creates that catalog
+  with an empty schema at setup time.
+- `setup.sh` no longer reports a genuine SQL failure as "no landing-zone
+  data found"; the two cases are distinguished before DuckDB runs.
+- `setup.sh` removes partially-built catalogs on a failed build, rather
+  than leaving an empty one that `attach.sql` would silently open.
+
 ## [0.4.0] - 2026-09-28
 
 ### Added

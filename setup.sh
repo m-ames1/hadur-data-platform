@@ -3,10 +3,12 @@ set -euo pipefail
 
 echo "Setting up hadur-data-platform..."
 
-if ! command -v uv &> /dev/null; then
-    echo "uv not found. Install it: https://docs.astral.sh/uv/getting-started/installation/" >&2
-    exit 1
-fi
+for tool in uv duckdb; do
+    if ! command -v "$tool" &> /dev/null; then
+        echo "$tool not found. See README.md for installation links." >&2
+        exit 1
+    fi
+done
 
 uv sync
 echo "Python dependencies installed (uv sync)."
@@ -14,15 +16,26 @@ echo "Python dependencies installed (uv sync)."
 uv run pre-commit install
 echo "Pre-commit hooks installed."
 
-if ! command -v duckdb &> /dev/null; then
-    echo "duckdb not found. Install it: https://duckdb.org/docs/installation" >&2
-    exit 1
+# schema_landing.sql defines views over CSV globs and binds those paths at
+# CREATE VIEW time, so it aborts on the first missing path. Check for data
+# before invoking it, to keep "no data yet" distinct from a real SQL error.
+shopt -s nullglob
+landing_batches=(data/landing_zone/*/*/)
+shopt -u nullglob
+
+if (( ${#landing_batches[@]} == 0 )); then
+    echo "No landing-zone data found — skipping catalog build."
+    echo "Place a Synthea batch under data/landing_zone/<provider>/<batch_date>/,"
+    echo "then re-run ./setup.sh."
+else
+    mkdir -p catalog
+    if duckdb hadur.duckdb -init setup/schema_landing.sql -no-stdin; then
+        echo "Landing catalog built under catalog/."
+    else
+        rm -f catalog/landing.duckdb catalog/bronze.duckdb
+        echo "Catalog build failed; removed the partial catalogs." >&2
+        exit 1
+    fi
 fi
-
-mkdir -p catalog
-
-duckdb hadur.duckdb -init setup/schema.sql -no-stdin
-echo "Layer catalogs built under catalog/ from setup/schema.sql."
-echo "Query them with: duckdb hadur.duckdb -init setup/attach.sql"
 
 echo "Setup complete."
