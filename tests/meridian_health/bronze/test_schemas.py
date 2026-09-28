@@ -72,3 +72,11 @@ def test_patients_schema():
 @pytest.mark.skip(reason="not implemented")
 def test_conditions_schema():
     pass
+
+
+# Observations schema tests
+# TODO: Add ObservationsSchema unit tests
+# Separate unit test for each test case, see above
+@pytest.mark.skip(reason="not implemented")
+def test_observations_schema():
+    pass
