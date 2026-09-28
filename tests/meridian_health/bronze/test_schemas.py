@@ -64,3 +64,11 @@ def test_encounters_schema_rejects_uncoercible_value():
 @pytest.mark.skip(reason="not implemented")
 def test_patients_schema():
     pass
+
+
+# Conditions schema tests
+# TODO: Add ConditionsSchema unit tests
+# Separate unit test for each test case, see above
+@pytest.mark.skip(reason="not implemented")
+def test_conditions_schema():
+    pass
