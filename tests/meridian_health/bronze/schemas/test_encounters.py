@@ -2,7 +2,7 @@ import pandas as pd
 import pandera.pandas as pa
 import pytest
 
-from src.meridian_health.bronze.schemas import EncountersSchema
+from src.meridian_health.bronze.schemas.encounters import EncountersSchema
 
 SCHEMA_ERRORS = (pa.errors.SchemaError, pa.errors.SchemaErrors)
 
@@ -28,7 +28,6 @@ valid_encounter_row = {
 valid_encounters_df = pd.DataFrame(valid_encounter_row)
 
 
-# Immutable operation preferred over in-place mutations
 # Encounters schema tests
 def test_encounters_schema_valid_row_passes():
     result_df = EncountersSchema.validate(valid_encounters_df)
@@ -38,6 +37,7 @@ def test_encounters_schema_valid_row_passes():
 
 
 def test_encounters_schema_rejects_null_required_column():
+    # Immutable operation preferred over in-place mutations
     null_required_col_df = valid_encounters_df.assign(PATIENT=None)
 
     with pytest.raises(SCHEMA_ERRORS):
@@ -56,27 +56,3 @@ def test_encounters_schema_rejects_uncoercible_value():
 
     with pytest.raises(SCHEMA_ERRORS):
         EncountersSchema.validate(uncoercible_value_df)
-
-
-# Patients schema tests
-# TODO: Add PatientsSchema unit tests
-# Separate unit test for each test case, see above
-@pytest.mark.skip(reason="not implemented")
-def test_patients_schema():
-    pass
-
-
-# Conditions schema tests
-# TODO: Add ConditionsSchema unit tests
-# Separate unit test for each test case, see above
-@pytest.mark.skip(reason="not implemented")
-def test_conditions_schema():
-    pass
-
-
-# Observations schema tests
-# TODO: Add ObservationsSchema unit tests
-# Separate unit test for each test case, see above
-@pytest.mark.skip(reason="not implemented")
-def test_observations_schema():
-    pass
