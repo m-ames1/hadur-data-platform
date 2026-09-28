@@ -1,0 +1,24 @@
+START,STOP,PATIENT,ENCOUNTER,CODE,SYSTEM,DESCRIPTION,TYPE,CATEGORY,REACTION1,DESCRIPTION1,SEVERITY1,REACTION2,DESCRIPTION2,SEVERITY2
+1986-11-04,,6aed9210-c500-4375-b0fc-3374c40b8591,6aed9210-c500-4375-319c-0afc9416b3fd,609328004,Unknown,Allergic disposition (finding),allergy,environment,,,,,,
+1986-11-04,,6aed9210-c500-4375-b0fc-3374c40b8591,6aed9210-c500-4375-319c-0afc9416b3fd,412071004,Unknown,Wheat (substance),allergy,food,271807003,,MODERATE,,,
+2016-10-09,,6f45f2e9-a617-570a-8867-dec1260088bb,6f45f2e9-a617-570a-2107-f6bd879cbc45,609328004,Unknown,Allergic disposition (finding),allergy,environment,,,,,,
+2016-10-09,,6f45f2e9-a617-570a-8867-dec1260088bb,6f45f2e9-a617-570a-2107-f6bd879cbc45,260147004,Unknown,Huose dust mite (organism),allergy,environment,,,,,,
+2016-10-09,,6f45f2e9-a617-570a-8867-dec1260088bb,6f45f2e9-a617-570a-2107-f6bd879cbc45,29046,Unknown,Lisinopril,intolerance,medication,237849008,Drug-induced hyperkalemia (disorder),MODERATE,,,
+1998-02-14,,d57841fa-c9e2-a3d1-0e78-09bdbe4eed66,d57841fa-c9e2-a3d1-bdf9-30493cd7b4b2,609328004,Unknown,Allergic disposition (finding),allergy,environment,,,,,,
+1998-02-14,,d57841fa-c9e2-a3d1-0e78-09bdbe4eed66,d57841fa-c9e2-a3d1-bdf9-30493cd7b4b2,1191,Unknown,Aspirin,allergy,medication,,,,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,609328004,Unknown,Allergic disposition (finding),allergy,environment,,,,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,288328004,Unknown,Bee venom (substance),allergy,environment,271807003,Eruption of skin (disorder),MODERATE,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,84489001,Unknown,Mold (organism),allergy,environment,21626009,,MILD,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,260147004,Unknown,House dust mite (organism),allergy,environment,,,,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,264287008,Unknown,Animal dander (substance),allergy,environment,878820003,Rhinoconjunctivitis (disorder),MODERATE,267036007,Dyspnea (finding),MILD
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,256277009,Unknown,Grass pollen (substance),allergy,environment,,,,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,782576004,Unknown,Tree pollen (substance),allergy,environment,,,,,,
+2005-08-25,,3236b1f8-2bc1-3e38-c539-a29407c6a206,3236b1f8-2bc1-3e38-7774-b2b5b510b926,735971005,Unknown,Fish (substance),allergy,food,267036007,Dyspnea (finding),MODERATE,271807003,Eruption of skin (disorder),MILD
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,609328004,Unknown,Allergic disposition (finding),allergy,environment,,,,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,84489001,Unknown,Mold (organism),allergy,environment,56018004,Wheezing (finding),MILD,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,260147004,Unknown,House dust mite (organism),allergy,environment,,,,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,264287008,Unknown,Animal dander (substance),allergy,environment,878820003,Rhinoconjunctivitis (disorder),MODERATE,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,256277009,Unknown,Grass pollen (substance),allergy,environment,,,,,,
+02/16/2019,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,782576004,Unknown,Tree pollen (substance),allergy,environment,,,,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,735971005,Unknown,Fish (substance),allergy,food,271807003,Eruption of skin (disorder),MILD,,,
+2019-02-16,,06eb6dda-a918-928f-76cf-6bf370cf2014,06eb6dda-a918-928f-cf60-beb0a5a2142b,762952008,Unknown,Peanut (substance),allergy,food,247472004,Wheal (finding),MODERATE,300359004,Finding of vomiting (finding),MILD

@@ -22,8 +22,42 @@ cd hadur-data-platform
 ./setup.sh
 ```
 
-`setup.sh` installs Python dependencies, wires up pre-commit, and builds the local
-DuckDB catalogs. Then configure and start Airflow:
+`setup.sh` installs dependencies, wires up pre-commit, seeds the landing zone from the committed sample batch, and builds the landing catalog. The repository is runnable immediately — no data generation required.
+
+Run the Bronze pipelines:
+
+```bash
+uv run python -m src.meridian_health.bronze.pipelines.encounters
+uv run python -m src.meridian_health.bronze.pipelines.patients
+uv run python -m src.meridian_health.bronze.pipelines.conditions
+uv run python -m src.meridian_health.bronze.pipelines.observations
+```
+
+Each reads its landing file, stamps provenance columns, and writes a Delta table to `data/bronze/<provider>/<table>`. Writes are idempotent at the batch level — re-running the same batch date replaces that batch rather than duplicating it.
+
+Build the Bronze catalog views over that output, then query:
+
+```bash
+duckdb hadur.duckdb -init setup/schema_bronze.sql -no-stdin
+duckdb hadur.duckdb -init setup/attach.sql
+```
+
+```sql
+SELECT count(*) FROM bronze.meridian_health.encounters;  -- 437
+SELECT * FROM landing.meridian_health.patients LIMIT 5;
+```
+
+`schema_bronze.sql` is a separate step by necessity: its views are defined over Delta tables, and DuckDB resolves those paths when the view is created rather than when it is queried, so they cannot exist before the first pipeline run.
+
+### About the sample data
+
+`sample_data/` holds a committed 10-patient batch — 437 encounters, 216 conditions, 2,731 observations, roughly 3 MB — carved from a full Synthea export by [`scripts/build_sample_batch.py`](scripts/build_sample_batch.py). The cohort is selected by patient and cascaded through every table, so all foreign keys resolve and the sample supports the same joins as a full batch.
+
+It exists so the repository is runnable on clone. To work with a full batch instead, generate one with Synthea, place it under `data/landing_zone/`, and re-run `./setup.sh` — existing landing-zone data is never overwritten.
+
+### Airflow (infrastructure only)
+
+Airflow is provisioned locally via Docker Compose, but **no DAGs are implemented yet** — pipelines currently run as scripts. Orchestration lands in a later release.
 
 ```bash
 cp .env.example .env
@@ -41,7 +75,6 @@ docker compose up
 ```
 
 - Airflow UI: [http://localhost:8080](http://localhost:8080)
-- Query the local catalogs: `duckdb hadur.duckdb -init setup/attach.sql`
 
 ## Why Hadúr?
 
