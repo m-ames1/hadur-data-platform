@@ -19,6 +19,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.4.0] - 2026-09-28
+
+### Added
+
+- Bronze ingestion for the Meridian Health `observations` table, via
+  `observations_pipeline.py`, using the same shared
+  `run_bronze_pipeline()` path as the other three tables.
+- An `ObservationsSchema` placeholder in `schemas.py` — fields-less,
+  same pattern as the other stubs, so the pending schema work is
+  visible rather than absent.
+- A skipped test stub for the pending `ObservationsSchema` tests in
+  `test_schemas.py`.
+
+### Known limitations
+
+- `ObservationsSchema` has no columns declared yet — validation isn't
+  enforced for observations, same as the other three tables.
+- `observations` has no `Id` column and, unlike `conditions`, no
+  reliable natural key at all — its composite key
+  (`PATIENT` + `ENCOUNTER` + `CODE` + `DATE`) repeats for roughly 250
+  rows. Dedup logic here can't assume any column combination is
+  unique — Silver-layer work, not part of this release.
+- Schema validation still isn't wired into the write path at all
+  across any table. Quarantine handling remains unimplemented.
+- All four tables planned for this first onboarding batch are now
+  ingested (`encounters`, `patients`, `conditions`, `observations`) —
+  the next table onboarded starts a new batch.
+
 ## [0.3.0] - 2026-09-27
 
 ### Added
