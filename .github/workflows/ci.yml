@@ -23,8 +23,8 @@ jobs:
           
           - name: Verify requirements.txt is in sync
             run: |
-              uv export --no-dev --format requirements.txt --output-file /tmp/requirements.txt
-              diff requirements.txt /tmp/requirements.txt
+              uv export --no-dev --format requirements.txt --output-file=/tmp/requirements.txt
+              diff <(grep -v '^#' requirements.txt) <(grep -v '^#' /tmp/requirements.txt)
 
           - name: Lint
             run: uv run ruff check .
