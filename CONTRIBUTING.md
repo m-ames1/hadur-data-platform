@@ -24,6 +24,50 @@ don't have to be re-derived from memory later.
 - Run any project command through `uv run <command>` (e.g. `uv run pytest`) instead of
   activating the virtualenv manually — `uv run` uses `.venv` automatically
 
+## Dependency workflow
+
+Dependencies are only ever changed via `uv add <package>` / `uv remove <package>`
+(or `uv add --dev <package>` for dev-only tools) — never by hand-editing the
+`dependencies` list in `pyproject.toml`. Those commands update `pyproject.toml`
+and `uv.lock` together, atomically, so the two can't drift apart.
+
+`requirements.txt` is a separate export artifact, used only to install
+`src/meridian_health` into the Airflow image (see `Dockerfile`). It is never
+updated by `uv add`/`uv remove` — it's regenerated automatically by a
+pre-commit hook, described below.
+
+## Automated checks
+
+Pre-commit hooks run on every `git commit`, in order, and stop at the first
+failure (`fail_fast: true`):
+
+1. `ruff` — lints, auto-fixes what it can
+2. `ruff-format` — auto-formats
+3. `uv-lock` — verifies `uv.lock` matches `pyproject.toml` (check only)
+4. `uv-export` — regenerates `requirements.txt` from `uv.lock`, only if step 3 passed
+
+If `uv-lock` fails, the commit is blocked and `requirements.txt` is left
+untouched — that's a signal something drifted outside the normal `uv add`
+workflow and needs investigating, not something to fix by re-running export.
+
+If `uv-export` regenerates `requirements.txt` with real changes, pre-commit
+reports that step as failed even though nothing is wrong — `git add
+requirements.txt` and commit again to pick up the regenerated file.
+
+There's no pre-commit hook for tests; running the full suite on every commit
+would be too slow. Run `uv run pytest --cov=src --cov-report=term-missing`
+yourself before pushing — CI is the only enforced backstop if that's skipped.
+
+CI (`.github/workflows/ci.yml`) re-verifies the same lockfile/lint/format
+checks independently, as a backstop for hooks that were skipped or bypassed
+locally, and is the only place tests actually run automatically:
+
+1. Sync dependencies (`uv sync --locked`) — fails if the lockfile is out of sync
+2. Verify `requirements.txt` is in sync with `uv.lock`
+3. `ruff check .`
+4. `ruff format --check`
+5. `uv run pytest`
+
 ## Local querying
 
 Tables are addressed as `<layer>.<provider>.<table>` — e.g. `bronze.meridian_health.encounters`.
