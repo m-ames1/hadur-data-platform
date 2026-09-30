@@ -1,4 +1,4 @@
-# Read -> validate -> stamp provenance -> write/quarantine
+# One runnable entry point per table
 
 # %%
 from datetime import date
