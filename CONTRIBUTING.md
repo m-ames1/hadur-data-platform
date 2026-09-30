@@ -119,5 +119,5 @@ Loosely follow [Conventional Commits](https://www.conventionalcommits.org/):
 ## Pull requests
 
 - All changes land on `main` through a PR — direct pushes are blocked by branch protection, enforced even for the repo owner
-- PRs require conversation resolution and linear history (squash or rebase merge only, no merge commits)
+- PRs require conversation resolution and linear history (squash merge only)
 - No PR merges without tests included in the same PR
