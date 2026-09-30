@@ -11,15 +11,21 @@ don't have to be re-derived from memory later.
   ```bash
   ./setup.sh
   ```
-  This installs dependencies (`uv sync`), wires up the pre-commit git hook, and builds
-  the local DuckDB catalogs under `catalog/` from `setup/schema.sql` — requires `uv` and
-  `duckdb` to already be installed
+  This installs dependencies (`uv sync`), wires up the pre-commit git hook, seeds
+  `data/landing_zone/` from the committed sample batch if no landing data exists yet, and
+  builds the landing catalog under `catalog/` from `setup/schema_landing.sql` — requires `uv`
+  and `duckdb` to already be installed
 - To run those steps individually instead (or if `setup.sh` fails partway through):
   ```bash
   uv sync
   uv run pre-commit install
+  mkdir -p data && cp -R sample_data/landing_zone data/   # fresh clone only
   mkdir -p catalog
-  duckdb hadur.duckdb -init setup/schema.sql -no-stdin
+  duckdb hadur.duckdb -init setup/schema_landing.sql -no-stdin
+  ```
+- Bronze views are built separately, after at least one pipeline has written output:
+  ```bash
+  duckdb hadur.duckdb -init setup/schema_bronze.sql -no-stdin
   ```
 - Run any project command through `uv run <command>` (e.g. `uv run pytest`) instead of
   activating the virtualenv manually — `uv run` uses `.venv` automatically
@@ -35,6 +41,11 @@ and `uv.lock` together, atomically, so the two can't drift apart.
 `src/meridian_health` into the Airflow image (see `Dockerfile`). It is never
 updated by `uv add`/`uv remove` — it's regenerated automatically by a
 pre-commit hook, described below.
+
+Dependabot security updates are enabled. Dependabot PRs bump `uv.lock` but
+don't regenerate `requirements.txt`, so the `dependabot-requirements-sync`
+workflow does it on the PR branch (see below). Review and merge them like any
+other PR.
 
 ## Automated checks
 
@@ -58,15 +69,35 @@ There's no pre-commit hook for tests; running the full suite on every commit
 would be too slow. Run `uv run pytest --cov=src --cov-report=term-missing`
 yourself before pushing — CI is the only enforced backstop if that's skipped.
 
-CI (`.github/workflows/ci.yml`) re-verifies the same lockfile/lint/format
-checks independently, as a backstop for hooks that were skipped or bypassed
-locally, and is the only place tests actually run automatically:
+CI runs as three GitHub Actions workflows on every pull request:
+
+| Workflow | Job | Required to merge | What it does |
+|---|---|---|---|
+| `ci.yml` | `test` | Yes | Re-verifies the lockfile, `requirements.txt` sync, lint, and format, then runs the tests |
+| `pr-title-lint.yml` | `lint-pr-title` | Yes | Checks the PR title against the convention below. Skipped on Dependabot PRs |
+| `dependabot-requirements-sync.yml` | `sync-requirements` | No | On Dependabot PRs only, regenerates `requirements.txt` and pushes it to the PR branch |
+
+Required checks are enforced by the `main-protection` ruleset. A skipped
+required check counts as passing, which is why `lint-pr-title` can be required
+while skipping Dependabot's PRs, whose titles don't follow the convention.
+
+`ci.yml` runs these steps, as a backstop for hooks that were skipped or
+bypassed locally, and is the only place tests actually run automatically:
 
 1. Sync dependencies (`uv sync --locked`) — fails if the lockfile is out of sync
 2. Verify `requirements.txt` is in sync with `uv.lock`
 3. `ruff check .`
 4. `ruff format --check`
 5. `uv run pytest`
+
+`ci.yml` also runs on every push to `main`, which re-tests the squash commit
+that actually landed. A failure there doesn't undo the merge — fix forward
+with a new PR.
+
+`dependabot-requirements-sync.yml` pushes with a fine-grained personal access
+token stored as the `DEPENDABOT_SYNC_TOKEN` secret, because GitHub makes the
+default token read-only on Dependabot-triggered runs. The token expires; when
+it does, this workflow fails and the token needs regenerating.
 
 ## Local querying
 
@@ -85,9 +116,10 @@ duckdb hadur.duckdb -init setup/attach.sql
 Run it from the project root — the views store relative paths and resolve them against the
 process working directory.
 
-When onboarding a provider, add a schema to the relevant layer catalog in `setup/schema.sql`
-rather than a new view-name prefix. Layer catalogs are gitignored build artifacts, reproducible
-at any time from `setup/schema.sql`.
+When onboarding a provider, add a schema to the relevant layer catalog — in
+`setup/schema_landing.sql` for landing, `setup/schema_bronze.sql` for Bronze — rather than a
+new view-name prefix. Layer catalogs are gitignored build artifacts, reproducible at any time
+from those scripts.
 
 ## Branching model
 
@@ -103,10 +135,19 @@ Examples:
 
 Types in use: `feat`, `fix`, `chore`, `docs`, `refactor`.
 
-## Commit messages
+## Commit messages and PR titles
 
-Loosely follow [Conventional Commits](https://www.conventionalcommits.org/):
-`type: short description`, e.g. `chore: add CONTRIBUTING.md`.
+PRs are squash-merged, so the PR title becomes the single commit that lands
+on `main`. PR titles are enforced by the `lint-pr-title` check:
+
+- Format: `type: Description`, following [Conventional Commits](https://www.conventionalcommits.org/)
+- `type` is one of the types above, and matches the branch type
+- The description starts with a capital letter
+- Example: `chore: Add DuckDB dependency`
+
+Commits inside a PR follow the same title format by convention, with a body of
+bullet points, one per change. They aren't checked, because squash merging
+discards them.
 
 ## Versioning
 
@@ -118,6 +159,21 @@ Loosely follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## Pull requests
 
-- All changes land on `main` through a PR — direct pushes are blocked by branch protection, enforced even for the repo owner
+- All changes land on `main` through a PR — direct pushes are blocked by the `main-protection` ruleset, enforced even for the repo owner
 - PRs require conversation resolution and linear history (squash merge only)
+- `test` and `lint-pr-title` must pass before merge — enforced as required status checks
 - No PR merges without tests included in the same PR
+- Required approvals: 0, since this is a solo project. If contributors join, raise required approvals to 1 in the `main-protection` ruleset
+
+## Architecture decisions
+
+Decisions about the system's shape are recorded in [`docs/adr/`](docs/adr/). A PR that makes
+one adds its ADR in the same PR. See [`docs/adr/README.md`](docs/adr/README.md) for the rules.
+
+## Not configured, on purpose
+
+- **Continuous deployment.** There's no deployed service, published package, or built
+  artifact to ship yet. Revisit once there's a persistent deployment target, such as a
+  long-running Airflow instance, to trigger a build against.
+- **Signed commits.** Solo project, so there's no one else's identity to distinguish commits
+  from. Revisit if this repo takes outside contributors.
