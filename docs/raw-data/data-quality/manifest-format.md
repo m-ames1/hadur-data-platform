@@ -7,7 +7,7 @@ quality issues present in that batch, row by row.
 ## Layout
 
 ```
-data/raw/<BATCH_DATE>/
+data/landing_zone/all/raw/<BATCH_DATE>/
 ├── csv/                    18 CSVs
 ├── manifest.jsonl          one JSON record per known data quality issue
 └── manifest_summary.json   aggregated counts over the same batch

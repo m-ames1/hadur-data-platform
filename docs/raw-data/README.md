@@ -1,8 +1,9 @@
-# Documentation for `data/raw/`
+# Documentation for `data/landing_zone/all/raw/`
 
-Reference documentation for this repo's bronze-layer input data
-(`data/raw/<BATCH_DATE>/`) — the 18-CSV schema, known data quality issues,
-and table relationships.
+Reference documentation for the full Synthea export
+(`data/landing_zone/all/raw/<BATCH_DATE>/`) that each provider's landing
+data is drawn from — the 18-CSV schema, known data quality issues, and
+table relationships.
 
 ## Contents
 

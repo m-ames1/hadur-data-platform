@@ -1,6 +1,6 @@
 # Data-quality notes: quirks not in the manifest
 
-**Scope: oddities and null patterns in `data/raw/<BATCH_DATE>/csv/` that
+**Scope: oddities and null patterns in `data/landing_zone/all/raw/<BATCH_DATE>/csv/` that
 are *not* catalogued in `manifest.jsonl`** — noted while documenting the
 schema (`../schema/overview.md`, `../schema/core-entities.md`,
 `../schema/clinical-events.md`, `../schema/financial-billing.md`). See
