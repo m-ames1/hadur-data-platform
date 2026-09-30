@@ -120,6 +120,7 @@ Pre-commit hooks run Ruff automatically on staged files. See [CONTRIBUTING.md](C
 │   ├── schema_bronze.sql             # Bronze views — built after first ingestion
 │   └── attach.sql                    # Read-only ATTACH for query sessions
 ├── docs/
+│   ├── adr/                          # Architecture decision records
 │   ├── assets/                       # README imagery
 │   ├── raw-data/
 │   │   ├── schema/                   # Synthea table reference, grouped by domain
@@ -324,6 +325,7 @@ The era opens with a second hand-coded pass over the *same* Meridian Health feed
 - [x] Bronze ingestion for 4 of 14 Meridian Health tables — `encounters`, `patients`, `conditions`, `observations`
 - [x] Per-table package structure for pipelines and schemas
 - [x] Committed sample batch, so the repository runs end to end on clone
+- [x] CI: lint, format, and tests required on every PR, plus PR title linting
 
 **In progress**
 
@@ -340,14 +342,14 @@ The era opens with a second hand-coded pass over the *same* Meridian Health feed
 - [ ] Privacy cleaning — Silver → Gold quasi-identifier generalization
 - [ ] Gold layer (`gold.<provider>.<table>`)
 - [ ] Delivery step (`delivery.encounter_summary`)
-- [ ] CI workflow (lint + tests on pull request)
 
 ## Documentation
 
 | Document | Contents |
 |---|---|
 | [CHANGELOG.md](CHANGELOG.md) | Per-release history, each with an explicit *Known limitations* section |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Branching model, commit conventions, SemVer policy, catalog conventions |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branching model, commit and PR conventions, CI and merge rules, SemVer policy, catalog conventions |
+| [docs/adr/](docs/adr/) | Architecture decision records — why the system is shaped the way it is |
 | [docs/suppliers/meridian_health.md](docs/suppliers/meridian_health.md) | Provider scope and why an IDN was chosen |
 | [docs/raw-data/schema/](docs/raw-data/schema/) | Synthea table reference, grouped by domain |
 | [docs/raw-data/data-quality/manifest-format.md](docs/raw-data/data-quality/manifest-format.md) | Batch data-quality manifest format |
