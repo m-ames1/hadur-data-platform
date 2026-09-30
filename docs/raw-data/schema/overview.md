@@ -1,6 +1,6 @@
 # Data schema
 
-Reference documentation for the 18 CSVs in `data/raw/<BATCH_DATE>/csv/`.
+Reference documentation for the 18 CSVs in `data/landing_zone/all/raw/<BATCH_DATE>/csv/`.
 Each cluster file covers one real-world domain: what each table represents,
 what its columns mean, and how it foreign-keys to the rest.
 
@@ -236,6 +236,6 @@ where you currently live [PRAPARE]").
 - Sample values are pulled from the `2026-09-01` batch (a 100-patient New
   York population, 112 patient rows including deceased) unless noted
   otherwise. Where a shown sample value falls on a row/column catalogued in
-  `manifest.jsonl`, the live value in `data/raw/2026-09-01/csv/` may differ
+  `manifest.jsonl`, the live value in `data/landing_zone/all/raw/2026-09-01/csv/` may differ
   from what's shown here — cross-check the manifest by `row_id` if an exact
   match matters.
