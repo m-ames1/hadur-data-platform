@@ -21,6 +21,7 @@
 **Docs**
 
 - [ ] Docs updated if behavior, layout or conventions changed
+- [ ] ADR added in `docs/adr/` if this PR changes the system's shape
 
 ## Known limitations
 
