@@ -32,7 +32,7 @@ htmlcov/
 # Raw data
 data/
 
-# DuckDB catalog file - reproducible from setup/schema.sql
+# DuckDB catalog files - reproducible from setup/schema_landing.sql and setup/schema_bronze.sql
 *.duckdb
 *.duckdb.wal
 

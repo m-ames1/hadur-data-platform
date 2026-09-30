@@ -9,7 +9,8 @@
 --   ATTACH is per-connection session state. The views inside each layer
 --   catalog persist in its .duckdb file, but the aliases that make them
 --   reachable as `landing` and `bronze` do not — every new connection has to
---   re-attach. So this runs every session, while setup/schema.sql runs once.
+--   re-attach. So this runs every session, while the schema scripts
+--   (schema_landing.sql, schema_bronze.sql) run once.
 --
 --   IF NOT EXISTS   makes the file safe to run twice in one session (an init
 --                   script plus a .read from a query file, say) instead of
