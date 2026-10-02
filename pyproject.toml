@@ -12,6 +12,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "delta-spark>=4.4.0",
     "freezegun>=1.5.5",
     "ipykernel>=7.3.0",
     "pre-commit>=4.6.2",
