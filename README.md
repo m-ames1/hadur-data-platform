@@ -57,9 +57,11 @@ SELECT * FROM landing.meridian_health.patients LIMIT 5;
 
 ### About the sample data
 
-`sample_data/` holds a committed 10-patient batch — 437 encounters, 216 conditions, 2,731 observations, roughly 3 MB — carved from a full Synthea export by [`scripts/build_sample_batch.py`](scripts/build_sample_batch.py). The cohort is selected by patient and cascaded through every table, so all foreign keys resolve and the sample supports the same joins as a full batch.
+`sample_data/` holds a committed 10-patient batch — 437 encounters, 216 conditions, 2,731 observations, roughly 3 MB — carved from a full batch by [`scripts/build_sample_batch.py`](scripts/build_sample_batch.py). The cohort is selected by patient and cascaded through every table, so all foreign keys resolve and the sample supports the same joins as a full batch.
 
-It exists so the repository is runnable on clone. To work with a full batch instead, generate one with Synthea, place it under `data/landing_zone/`, and re-run `./setup.sh` — existing landing-zone data is never overwritten.
+Full batches are synthetic Synthea data with data-quality defects deliberately injected, delivered with a manifest cataloguing each one (see [`docs/raw-data/data-quality/manifest-format.md`](docs/raw-data/data-quality/manifest-format.md)). The sample carries those injected defects but ships without the manifest.
+
+It exists so the repository is runnable on clone. To work with a full batch instead, place it under `data/landing_zone/` and re-run `./setup.sh` — existing landing-zone data is never overwritten. A plain Synthea export also runs through the pipelines, but it has no injected defects and no manifest.
 
 ### Airflow (infrastructure only)
 
@@ -178,7 +180,7 @@ Provider data enters the platform with its original values preserved. Columns ar
 
 ### Silver — The forge
 
-Transformations clean and refine the raw material into conformed, per-entity tables, still scoped to their provider (`silver.<provider>.<table>`) and deliberately not joined. This is where defects from the batch manifest get resolved, and where **direct identifiers are removed** on the way in from Bronze: a stable hashed pseudonym key replaces the patient identifier, and the remaining direct identifiers are dropped.
+Transformations clean and refine the raw material into conformed, per-entity tables, still scoped to their provider (`silver.<provider>.<table>`) and deliberately not joined. This is where injected source defects (catalogued in the batch's data-quality manifest, when one is delivered) get resolved, and where **direct identifiers are removed** on the way in from Bronze: a stable hashed pseudonym key replaces the patient identifier, and the remaining direct identifiers are dropped.
 
 Quasi-identifiers such as exact dates and geography are kept in Silver, where they are still analytically useful.
 
