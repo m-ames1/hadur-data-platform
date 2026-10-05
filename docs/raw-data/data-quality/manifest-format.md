@@ -4,6 +4,14 @@
 `manifest.jsonl` and `manifest_summary.json` — which catalogue known data
 quality issues present in that batch, row by row.
 
+> **Where batches come from.** Full batches are synthetic Synthea data with
+> defects deliberately injected to exercise the cleaning layers, and the
+> manifest catalogues every injected issue. The committed 10-patient sample
+> under `sample_data/` is carved from a full batch, so it carries injected
+> defects too, but it ships without a manifest: the carve filters and
+> re-sorts rows, so the full batch's keyless-table line indexes wouldn't
+> line up with it.
+
 ## Layout
 
 ```
@@ -19,6 +27,14 @@ formatting inconsistencies, duplicate rows, broken references, and so on.
 Every issue the manifest lists is one already present in the delivered
 `csv/` files; the manifest doesn't change the data, it just tells you where
 to look.
+
+The manifest exists only at this level, once per full batch. Provider
+slices such as `data/landing_zone/meridian_health/<BATCH_DATE>/` are
+derived from these CSVs and carry no manifest of their own. Every
+`row_id` refers to the full batch's `csv/` files, not to a provider slice:
+for keyed tables the key value carries over unchanged, but for keyless
+tables the line index only matches the slice while the slice is an
+unfiltered copy, so resolve keyless-table issues against the full batch.
 
 ## `manifest.jsonl`
 
