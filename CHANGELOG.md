@@ -19,6 +19,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.6.0] - 2026-11-10
+
+### Added
+
+- Pandera schema validation in the Bronze write path, applied to
+  Meridian Health `encounters`. Rows that fail validation go to
+  `encounters_quarantine`, with one row per failed check in
+  `encounters_quarantine_failure_cases`. A missing, extra or renamed
+  column fails the run before anything is written.
+- DuckDB views `bronze.meridian_health.encounters_quarantine` and
+  `bronze.meridian_health.encounters_quarantine_failure_cases`.
+
+### Changed
+
+- **Breaking:** landing files are read with every column as a string, so
+  all four Bronze tables change column types. Delta keeps a table's schema
+  from its first write and batch-scoped overwrites can't change it, so
+  existing local tables must be rebuilt: delete
+  `data/bronze/meridian_health/*`, re-run the pipelines, then re-run
+  `setup/schema_bronze.sql`. Fresh clones are unaffected.
+- `EncountersSchema` declares every column as a string and no longer
+  coerces types; typing moves to Silver (ADR 0009).
+- `run_bronze_pipeline` takes an optional `schema`. Without one, the table
+  loads unvalidated as before — temporary until every table has a schema.
+
 ## [0.5.0] - 2026-09-28
 
 ### Added
