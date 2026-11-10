@@ -77,6 +77,12 @@ def test_write_to_bronze():
     pass
 
 
+# TODO: Add apply_quarantine_process unit test
+@pytest.mark.skip(reason="not implemented")
+def test_apply_quarantine_process():
+    pass
+
+
 # TODO: Add run_bronze_pipeline() integration test
 # Integration test, not a unit test — exercises a real CSV read and a
 # real Delta write (tmp_path + fixture CSV), no mocks.

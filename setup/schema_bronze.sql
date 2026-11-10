@@ -25,6 +25,14 @@ CREATE OR REPLACE VIEW bronze.meridian_health.encounters AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/encounters/');
 
+CREATE OR REPLACE VIEW bronze.meridian_health.encounters_quarantine AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/encounters_quarantine/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.encounters_quarantine_failure_cases AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/encounters_quarantine_failure_cases/');
+
 CREATE OR REPLACE VIEW bronze.meridian_health.patients AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/patients/');
