@@ -1,6 +1,7 @@
 import pandas as pd
 import pandera.pandas as pa
 import pytest
+from pandas.testing import assert_frame_equal
 
 from src.meridian_health.bronze.schemas.encounters import EncountersSchema
 
@@ -18,9 +19,9 @@ valid_encounter_row = {
     "ENCOUNTERCLASS": ["ambulatory"],
     "CODE": ["185347001"],
     "DESCRIPTION": ["Encounter for check up"],
-    "BASE_ENCOUNTER_COST": [136.80],
-    "TOTAL_CLAIM_COST": [136.80],
-    "PAYER_COVERAGE": [0.0],
+    "BASE_ENCOUNTER_COST": ["136.80"],
+    "TOTAL_CLAIM_COST": ["136.80"],
+    "PAYER_COVERAGE": ["0.0"],
     "REASONCODE": [None],
     "REASONDESCRIPTION": [None],
 }
@@ -32,8 +33,7 @@ valid_encounters_df = pd.DataFrame(valid_encounter_row)
 def test_encounters_schema_valid_row_passes():
     result_df = EncountersSchema.validate(valid_encounters_df)
 
-    assert result_df["BASE_ENCOUNTER_COST"].dtype == "float64"
-    assert result_df["START"].dtype == "datetime64[ns]"
+    assert_frame_equal(result_df, valid_encounters_df)
 
 
 def test_encounters_schema_rejects_null_required_column():
@@ -51,8 +51,8 @@ def test_encounters_schema_rejects_extra_column():
         EncountersSchema.validate(extra_col_df)
 
 
-def test_encounters_schema_rejects_uncoercible_value():
-    uncoercible_value_df = valid_encounters_df.assign(BASE_ENCOUNTER_COST="not a number")
+def test_encounters_schema_rejects_missing_column():
+    missing_col_df = valid_encounters_df.drop(columns="PATIENT")
 
     with pytest.raises(SCHEMA_ERRORS):
-        EncountersSchema.validate(uncoercible_value_df)
+        EncountersSchema.validate(missing_col_df)
