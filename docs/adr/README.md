@@ -33,3 +33,5 @@ follows from it, good and bad).
 | [0006](0006-idempotent-bronze-writes-by-batch-date.md) | Make Bronze writes idempotent per batch | Accepted |
 | [0007](0007-one-pipeline-module-per-bronze-table.md) | One thin pipeline module per Bronze table, one shared function | Accepted |
 | [0008](0008-committed-sample-batch-for-run-on-clone.md) | Commit a sample batch so the repository runs on clone | Accepted |
+| [0009](0009-bronze-validates-structure-not-types.md) | Bronze validates structure, not types | Accepted |
+| [0010](0010-row-level-quarantine-in-bronze.md) | Quarantine failing rows in Bronze | Accepted |
