@@ -4,19 +4,19 @@
 
 ## Checklist
 
+**Release**
+
+- [ ] Version bumped in `pyproject.toml` **and** `CHANGELOG.md` entry written — or N/A (no capability change)
+- [ ] Branch, commits and PR title carry conventional prefixes; PR title type matches branch type
+
 **Dependencies**
 
-- [ ] `uv lock` — lockfile regenerated (if `pyproject.toml` changed)
+- [ ] `uv lock` — lockfile regenerated after any `pyproject.toml` change, including the version bump
 - [ ] `uv export --no-dev --format requirements.txt --output-file requirements.txt` — regenerated (if runtime deps changed)
 
 **Quality**
 
 - [ ] `uv run pytest --cov=src --cov-report=term-missing` — all tests pass, no unexpected skips, new code covered
-
-**Release**
-
-- [ ] Version bumped in `pyproject.toml` **and** `CHANGELOG.md` entry written — or N/A (no capability change)
-- [ ] Branch, commits and PR title carry conventional prefixes; PR title type matches branch type
 
 **Docs**
 
