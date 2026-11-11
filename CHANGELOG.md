@@ -19,6 +19,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.7.0] - 2026-11-11
+
+### Added
+
+- Pandera schema validation and row-level quarantine for the remaining
+  Meridian Health Bronze tables — `patients`, `conditions` and
+  `observations` — so all four Bronze tables are now validated against
+  their data contract before being written. Each schema follows ADR 0009:
+  every column a string, `strict = True`, and `nullable=True` only on
+  columns the provider legitimately leaves blank. Failing rows go to
+  `<table>_quarantine`, with one row per failed check in
+  `<table>_quarantine_failure_cases`.
+- DuckDB views for the six new quarantine tables in
+  `bronze.meridian_health`.
+- Unit tests for the `patients`, `conditions` and `observations` schemas.
+
+### Changed
+
+- `run_bronze_pipeline` now requires `schema`. The unvalidated load path
+  is removed, as every Bronze table has a schema.
+- `encounters` schema tests now use two fixture rows — one fully
+  populated, one with every nullable column null — matching the other
+  schema tests.
+- The new quarantine views need their Delta tables to exist, so existing
+  local setups must re-run all four pipelines before re-running
+  `setup/schema_bronze.sql`. Fresh clones are unaffected.
+
+### Known limitations
+
+- `pd.read_csv` still applies pandas' default missing-value list, so
+  provider text such as `N/A`, `n/a` and `null` becomes NULL in Bronze
+  rather than being kept as delivered (ADR 0009). Fix planned as a
+  follow-up.
+- Quarantined rows can't yet be joined to their failure cases and aren't
+  re-validated on later runs (ADR 0010).
+
 ## [0.6.0] - 2026-11-10
 
 ### Added

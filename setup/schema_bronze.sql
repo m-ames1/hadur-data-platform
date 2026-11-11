@@ -37,10 +37,34 @@ CREATE OR REPLACE VIEW bronze.meridian_health.patients AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/patients/');
 
+CREATE OR REPLACE VIEW bronze.meridian_health.patients_quarantine AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/patients_quarantine/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.patients_quarantine_failure_cases AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/patients_quarantine_failure_cases/');
+
 CREATE OR REPLACE VIEW bronze.meridian_health.conditions AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/conditions/');
 
+CREATE OR REPLACE VIEW bronze.meridian_health.conditions_quarantine AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/conditions_quarantine/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.conditions_quarantine_failure_cases AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/conditions_quarantine_failure_cases/');
+
 CREATE OR REPLACE VIEW bronze.meridian_health.observations AS
     SELECT *
     FROM delta_scan('data/bronze/meridian_health/observations/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.observations_quarantine AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/observations_quarantine/');
+
+CREATE OR REPLACE VIEW bronze.meridian_health.observations_quarantine_failure_cases AS
+    SELECT *
+    FROM delta_scan('data/bronze/meridian_health/observations_quarantine_failure_cases/');
