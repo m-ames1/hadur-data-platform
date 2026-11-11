@@ -270,9 +270,8 @@ def apply_quarantine_process(
     )
 
 
-# TODO: Remove None = None for schema parameter once quarantine process is added for other 3 tables
 def run_bronze_pipeline(
-    batch_date: date, provider: str, table_name: str, schema: type[pa.DataFrameModel] | None = None
+    batch_date: date, provider: str, table_name: str, schema: type[pa.DataFrameModel]
 ) -> None:
     """
     Run the Bronze pipeline for a single table: read the landing file,
@@ -281,7 +280,7 @@ def run_bronze_pipeline(
 
     -> Build landing zone path
     -> Read raw data (all columns as strings)
-    -> Validate and split passed/failed rows (only when ``schema`` is given)
+    -> Validate and split passed/failed rows
     -> Write failed rows and failure reasons to the quarantine tables
     -> Add metadata columns
     -> Write passed rows to the Bronze Delta table
@@ -297,10 +296,8 @@ def run_bronze_pipeline(
         Name of the data provider.
     table_name : str
         Name of the table.
-    schema : type[pa.DataFrameModel] or None, optional
-        Pandera schema for the table. If ``None``, all rows are loaded
-        without validation and no quarantine tables are written. This is
-        temporary until every table has a schema. By default ``None``.
+    schema : type[pa.DataFrameModel]
+        Pandera schema defining the table's Bronze data contract.
 
     Returns
     -------
@@ -314,21 +311,13 @@ def run_bronze_pipeline(
 
     Examples
     --------
-    Validated load, writing Bronze and both quarantine tables:
+    Writes the Bronze table and both quarantine tables:
 
     >>> run_bronze_pipeline(
     ...     batch_date=date(2026, 9, 1),
     ...     provider="meridian_health",
     ...     table_name="encounters",
     ...     schema=EncountersSchema,
-    ... )
-
-    Unvalidated load (no schema yet), writing Bronze only:
-
-    >>> run_bronze_pipeline(
-    ...     batch_date=date(2026, 9, 1),
-    ...     provider="meridian_health",
-    ...     table_name="patients",
     ... )
     """
 
@@ -338,35 +327,32 @@ def run_bronze_pipeline(
 
     raw_df = pd.read_csv(filepath_or_buffer=landing_zone_file_path, delimiter=",", dtype=str)
 
-    if schema is None:
-        passed_df = raw_df
-    else:
-        # Validate and split passed/failed rows
-        passed_df, failed_df, failure_cases_df = apply_quarantine_process(
-            input_df=raw_df, schema=schema
-        )
+    # Validate and split passed/failed rows
+    passed_df, failed_df, failure_cases_df = apply_quarantine_process(
+        input_df=raw_df, schema=schema
+    )
 
-        # Write to quarantine table
-        bronze_failed_df = add_metadata_columns(
-            df=failed_df, source_file=landing_zone_file_path, batch_date=batch_date
-        )
-        write_to_bronze(
-            provider=provider,
-            table_name=f"{table_name}_quarantine",
-            df=bronze_failed_df,
-            batch_date=batch_date,
-        )
+    # Write to quarantine table
+    bronze_failed_df = add_metadata_columns(
+        df=failed_df, source_file=landing_zone_file_path, batch_date=batch_date
+    )
+    write_to_bronze(
+        provider=provider,
+        table_name=f"{table_name}_quarantine",
+        df=bronze_failed_df,
+        batch_date=batch_date,
+    )
 
-        # Write to quarantine failure reasons table
-        bronze_failure_cases_df = add_metadata_columns(
-            df=failure_cases_df, source_file=landing_zone_file_path, batch_date=batch_date
-        )
-        write_to_bronze(
-            provider=provider,
-            table_name=f"{table_name}_quarantine_failure_cases",
-            df=bronze_failure_cases_df,
-            batch_date=batch_date,
-        )
+    # Write to quarantine failure reasons table
+    bronze_failure_cases_df = add_metadata_columns(
+        df=failure_cases_df, source_file=landing_zone_file_path, batch_date=batch_date
+    )
+    write_to_bronze(
+        provider=provider,
+        table_name=f"{table_name}_quarantine_failure_cases",
+        df=bronze_failure_cases_df,
+        batch_date=batch_date,
+    )
 
     bronze_df = add_metadata_columns(
         df=passed_df, source_file=landing_zone_file_path, batch_date=batch_date
