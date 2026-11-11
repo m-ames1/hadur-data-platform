@@ -328,11 +328,11 @@ The era opens with a second hand-coded pass over the *same* Meridian Health feed
 - [x] Per-table package structure for pipelines and schemas
 - [x] Committed sample batch, so the repository runs end to end on clone
 - [x] CI: lint, format, and tests required on every PR, plus PR title linting
-- [x] Pandera schema validation in the Bronze write path, with row-level quarantine — `encounters`
+- [x] Pandera schema validation in the Bronze write path, with row-level quarantine — `encounters`, `patients`, `conditions`, `observations`
 
 **In progress**
 
-- [ ] Pandera schemas and validation for `patients`, `conditions`, and `observations` — currently placeholders, loaded unvalidated
+- Nothing in progress
 
 **Not yet started**
 
