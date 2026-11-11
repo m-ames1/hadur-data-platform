@@ -12,8 +12,8 @@ SCHEMA_ERRORS = (pa.errors.SchemaError, pa.errors.SchemaErrors)
 # All columns populated
 full_encounter_row = {
     "Id": "enc-2",
-    "START": "2026-09-01",
-    "STOP": "2026-09-01",
+    "START": "2026-09-01T09:00:00Z",
+    "STOP": "2026-09-01T10:00:00Z",
     "PATIENT": "patient-2",
     "ORGANIZATION": "org-2",
     "PROVIDER": "provider-2",
@@ -23,7 +23,7 @@ full_encounter_row = {
     "DESCRIPTION": "Encounter for symptom",
     "BASE_ENCOUNTER_COST": "136.80",
     "TOTAL_CLAIM_COST": "136.80",
-    "PAYER_COVERAGE": "0.0",
+    "PAYER_COVERAGE": "0.00",
     "REASONCODE": "10509002",
     "REASONDESCRIPTION": "Acute bronchitis (disorder)",
 }
@@ -31,8 +31,8 @@ full_encounter_row = {
 # All nullable columns containing Nulls
 minimum_viable_encounter_row = {
     "Id": "enc-1",
-    "START": "2026-09-01",
-    "STOP": "2026-09-01",
+    "START": "2026-09-01T09:00:00Z",
+    "STOP": "2026-09-01T10:00:00Z",
     "PATIENT": "patient-1",
     "ORGANIZATION": "org-1",
     "PROVIDER": "provider-1",
@@ -42,7 +42,7 @@ minimum_viable_encounter_row = {
     "DESCRIPTION": None,
     "BASE_ENCOUNTER_COST": "136.80",
     "TOTAL_CLAIM_COST": None,
-    "PAYER_COVERAGE": "0.0",
+    "PAYER_COVERAGE": "0.00",
     "REASONCODE": None,
     "REASONDESCRIPTION": None,
 }
