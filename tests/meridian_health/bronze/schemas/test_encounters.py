@@ -7,30 +7,51 @@ from src.meridian_health.bronze.schemas.encounters import EncountersSchema
 
 SCHEMA_ERRORS = (pa.errors.SchemaError, pa.errors.SchemaErrors)
 
+
 # Encounters schema input data
-valid_encounter_row = {
-    "Id": ["enc-1"],
-    "START": ["2026-09-01"],
-    "STOP": ["2026-09-01"],
-    "PATIENT": ["patient-1"],
-    "ORGANIZATION": ["org-1"],
-    "PROVIDER": ["provider-1"],
-    "PAYER": ["payer-1"],
-    "ENCOUNTERCLASS": ["ambulatory"],
-    "CODE": ["185347001"],
-    "DESCRIPTION": ["Encounter for check up"],
-    "BASE_ENCOUNTER_COST": ["136.80"],
-    "TOTAL_CLAIM_COST": ["136.80"],
-    "PAYER_COVERAGE": ["0.0"],
-    "REASONCODE": [None],
-    "REASONDESCRIPTION": [None],
+# All columns populated
+full_encounter_row = {
+    "Id": "enc-2",
+    "START": "2026-09-01",
+    "STOP": "2026-09-01",
+    "PATIENT": "patient-2",
+    "ORGANIZATION": "org-2",
+    "PROVIDER": "provider-2",
+    "PAYER": "payer-2",
+    "ENCOUNTERCLASS": "ambulatory",
+    "CODE": "185345009",
+    "DESCRIPTION": "Encounter for symptom",
+    "BASE_ENCOUNTER_COST": "136.80",
+    "TOTAL_CLAIM_COST": "136.80",
+    "PAYER_COVERAGE": "0.0",
+    "REASONCODE": "10509002",
+    "REASONDESCRIPTION": "Acute bronchitis (disorder)",
 }
 
-valid_encounters_df = pd.DataFrame(valid_encounter_row)
+# All nullable columns containing Nulls
+minimum_viable_encounter_row = {
+    "Id": "enc-1",
+    "START": "2026-09-01",
+    "STOP": "2026-09-01",
+    "PATIENT": "patient-1",
+    "ORGANIZATION": "org-1",
+    "PROVIDER": "provider-1",
+    "PAYER": "payer-1",
+    "ENCOUNTERCLASS": "ambulatory",
+    "CODE": "185347001",
+    "DESCRIPTION": None,
+    "BASE_ENCOUNTER_COST": "136.80",
+    "TOTAL_CLAIM_COST": None,
+    "PAYER_COVERAGE": "0.0",
+    "REASONCODE": None,
+    "REASONDESCRIPTION": None,
+}
+
+valid_encounters_df = pd.DataFrame(data=[full_encounter_row, minimum_viable_encounter_row])
 
 
 # Encounters schema tests
-def test_encounters_schema_valid_row_passes():
+def test_encounters_schema_valid_rows_pass():
     result_df = EncountersSchema.validate(valid_encounters_df)
 
     assert_frame_equal(result_df, valid_encounters_df)
