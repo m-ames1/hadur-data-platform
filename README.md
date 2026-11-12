@@ -176,7 +176,7 @@ Hadur Data Platform follows the logical stages of the Medallion Architecture, fo
 
 ### Bronze — Raw material
 
-Provider data enters the platform with its original values preserved. Columns are read as strings so that source-level defects survive ingestion instead of being masked by type coercion. Three provenance columns (`_source_file`, `_batch_date`, `_ingested_at`) are stamped onto every row. Writes are idempotent per batch, so a retried run replaces its own batch rather than duplicating it.
+Provider data enters the platform with its original values preserved. Columns are read as strings so that source-level defects survive ingestion instead of being masked by type coercion. Three provenance columns (`_source_file`, `_batch_date`, `_ingested_at`) are stamped onto every row. Each table is validated against a Pandera schema that acts as the provider's data contract: a missing, extra, or renamed column fails the run before anything is written, and rows that fail a check are routed to `<table>_quarantine` (with one row per failed check in `<table>_quarantine_failure_cases`) instead of blocking the batch. Writes are idempotent per batch, so a retried run replaces its own batch rather than duplicating it.
 
 ### Silver — The forge
 
@@ -315,7 +315,7 @@ The era opens with a second hand-coded pass over the *same* Meridian Health feed
 
 ## Current Status
 
-**Current release: `0.5.0`** — Version 1, Bronze layer in progress. See [CHANGELOG.md](CHANGELOG.md) for per-release detail, including an explicit *Known limitations* section on every version.
+**Current release: `0.7.0`** — Version 1, Bronze layer in progress. See [CHANGELOG.md](CHANGELOG.md) for per-release detail, including an explicit *Known limitations* section on every version.
 
 **Shipped**
 
@@ -338,6 +338,7 @@ The era opens with a second hand-coded pass over the *same* Meridian Health feed
 
 - [ ] Airflow DAG — pipelines currently run as standalone scripts
 - [ ] Remaining 10 of 14 Bronze tables
+- [ ] Quarantine re-validation — quarantined rows are not yet linked to their failure cases or re-checked on later runs
 - [ ] Meridian Health organization filtering — the provider slice is currently an unfiltered copy of the full Synthea export
 - [ ] Silver layer (`silver.<provider>.<table>`) with direct-identifier removal
 - [ ] Privacy cleaning — Silver → Gold quasi-identifier generalization
