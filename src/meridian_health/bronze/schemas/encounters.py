@@ -22,5 +22,5 @@ class EncountersSchema(pa.DataFrameModel):
 
     class Config:  # pyright: ignore[reportIncompatibleVariableOverride]
         # Reject any column not declared in this schema
-        # (catch schema drift - extra, dropped, and renamed columns)
+        # (catch schema drift / extra columns)
         strict = True

@@ -74,7 +74,7 @@ def add_metadata_columns(df: pd.DataFrame, source_file: Path, batch_date: date) 
     """
 
     # Use .assign to ensure a new DataFrame is returned with the
-    # columns added, leaving the orginal untouched
+    # columns added, leaving the original untouched
     # Follows same process as PySpark .withColumn()
     result_df = df.assign(
         _source_file=str(source_file),
@@ -246,7 +246,7 @@ def apply_quarantine_process(
         #  schema change), and quarantining every row would hide the break behind
         #  a "successful" run. Rerun the full batch date once it's fixed.
         if failure_cases_df["index"].isna().any():
-            raise  # table-level failure (missing/extra column): can't split by row, fail the batch
+            raise  # table-level failure (missing/extra/renamed column): fail the batch
         failure_cases_df = failure_cases_df[list(failure_cases_columns)].astype(
             failure_cases_columns
         )
