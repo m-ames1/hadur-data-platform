@@ -239,12 +239,12 @@ def apply_quarantine_process(
         failure_cases_df = e.failure_cases
 
         ## Table-level failures
-        # Handling for problems that cause the entire input dataset to fail validation
-        # If something breaks the entire DataFrame (missing entire column), the
-        #  failure cases DataFrame would contain a row with index column's value of Nan,
-        #  so if there's a single row with NaN in the index column, then we want to fail
-        #  the entire batch because the entire batch is impacted
-        # Later you could quarantine the entire batch instead as well
+        # A missing, extra, or renamed column produces a failure case with a NaN
+        #  index, because the problem isn't tied to any single row. That means the
+        #  provider broke the data contract, so fail the whole run on purpose
+        #  rather than quarantining: it needs a human decision (provider resend or
+        #  schema change), and quarantining every row would hide the break behind
+        #  a "successful" run. Rerun the full batch date once it's fixed.
         if failure_cases_df["index"].isna().any():
             raise  # table-level failure (missing/extra column): can't split by row, fail the batch
         failure_cases_df = failure_cases_df[list(failure_cases_columns)].astype(
