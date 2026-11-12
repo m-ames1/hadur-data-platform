@@ -16,5 +16,5 @@ class ConditionsSchema(pa.DataFrameModel):
 
     class Config:  # pyright: ignore[reportIncompatibleVariableOverride]
         # Reject any column not declared in this schema
-        # (catch schema drift and unexpected / extra columns)
+        # (catch schema drift / extra columns)
         strict = True

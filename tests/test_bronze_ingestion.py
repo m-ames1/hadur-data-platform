@@ -12,7 +12,7 @@ from src.bronze_ingestion import (
     build_landing_file_path,
 )
 
-# Both read HADUR_DATA_ROOT at runtime - hardcoding "data/..." here would assume it's unset
+# Both are built from HADUR_DATA_ROOT when src.config is imported, so don't hardcode "data/..." here
 from src.config import BRONZE_ZONE, LANDING_ZONE
 
 PROVIDER = "test_provider"

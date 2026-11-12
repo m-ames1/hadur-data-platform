@@ -4,9 +4,8 @@ from pandera.typing import Series
 
 
 class ObservationsSchema(pa.DataFrameModel):
-    # TODO: Add fields — no Id column, and no reliable natural key either.
-    # PATIENT + ENCOUNTER + CODE + DATE repeats for ~250 rows; can't be
-    # treated as unique the way it can for ConditionsSchema.
+    # PATIENT + ENCOUNTER + CODE + DATE repeats for ~250 rows of the initial
+    # 2026-09-01 batch; can't be treated as unique the way it can for ConditionsSchema
     DATE: Series[str]
     PATIENT: Series[str]
     ENCOUNTER: Series[str] = pa.Field(nullable=True)
@@ -19,5 +18,5 @@ class ObservationsSchema(pa.DataFrameModel):
 
     class Config:  # pyright: ignore[reportIncompatibleVariableOverride]
         # Reject any column not declared in this schema
-        # (catch schema drift and unexpected / extra columns)
+        # (catch schema drift / extra columns)
         strict = True
